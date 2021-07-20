@@ -135,6 +135,52 @@ optional arguments:
 ```
 The three subcommands: `inspect`, `query`, and `interactive`, are explained below:
 
+### `inspect`
+
+The `inspect` subcommand inspects a single NEO, printing its details in a human-readable format. The NEO is specified with exactly one of the `--pdes` option (the primary designation) and the `--name` option (the IAU name). The `--verbose` flag additionally prints out, in a human-readable form, all known close approaches to Earth made by this NEO. Each of these options has an abbreviated version. The full interface is explored by running `python3 main.py inspect --help`:
+
+```
+$ python3 main.py inspect --help
+usage: main.py inspect [-h] [-v] (-p PDES | -n NAME)
+
+Inspect an NEO by primary designation or by name.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Additionally, print all known close approaches of this NEO.
+  -p PDES, --pdes PDES  The primary designation of the NEO to inspect (e.g. '433').
+  -n NAME, --name NAME  The IAU name of the NEO to inspect (e.g. 'Halley').
+```
+
+Here are a few examples of the `inspect` subcommand in action:
+
+```
+# Inspect the NEO with a primary designation of 433 (that's Eros!)
+$ python3 main.py inspect --pdes 433
+NEO 433 (Eros) has a diameter of 16.840 km and is not potentially hazardous.
+
+# Inspect the NEO with an IAU name of "Halley" (that's Halley's Comet!)
+$ python3 main.py inspect --name Halley
+NEO 1P (Halley) has a diameter of 11.000 km and is not potentially hazardous.
+
+# Attempt to inspect an NEO that doesn't exist.
+$ python3 main.py inspect --name fake-comet
+No matching NEOs exist in the database.
+
+# Verbosely list information about Ganymed (largest known NEO) and each of its known close approaches.
+$ python3 main.py inspect --verbose --name Ganymed
+NEO 1036 (Ganymed) has a diameter of 37.675 km and is not potentially hazardous.
+- On 1911-10-15 19:16, '1036 (Ganymed)' approaches Earth at a distance of 0.38 au and a velocity of 17.09 km/s.
+- On 1924-10-17 00:51, '1036 (Ganymed)' approaches Earth at a distance of 0.50 au and a velocity of 19.36 km/s.
+- On 1998-10-14 05:12, '1036 (Ganymed)' approaches Earth at a distance of 0.46 au and a velocity of 13.64 km/s.
+- On 2011-10-13 00:04, '1036 (Ganymed)' approaches Earth at a distance of 0.36 au and a velocity of 14.30 km/s.
+- On 2024-10-13 01:56, '1036 (Ganymed)' approaches Earth at a distance of 0.37 au and a velocity of 16.33 km/s.
+- On 2037-10-15 18:31, '1036 (Ganymed)' approaches Earth at a distance of 0.47 au and a velocity of 18.68 km/s.
+```
+
+For an NEO to be found with the `inspect` subcommand, the given primary designation or IAU name must match the data exactly, so if an NEO is mysteriously missing, double-check the spelling and capitalization.
+
+
 
 
 
