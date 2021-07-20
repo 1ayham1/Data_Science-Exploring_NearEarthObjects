@@ -108,9 +108,9 @@ Below is an initial look at the data in `cad.json`. The "signature" field shows 
 
 Analysis will concentrate on _**des**_, _**cd**_, _**dist**_, and _**v_rel**_ measurements.
 
-* From this dataset, one can answer questions such as:
-   * On which date(s) does Halley's Comet pass near to Earth? or 
-   * How fast does Eros pass by Earth, on average?
+From this dataset, one can answer questions such as:
+ * On which date(s) does Halley's Comet pass near to Earth? or 
+ * How fast does Eros pass by Earth, on average?
 
 
 
