@@ -116,6 +116,26 @@ From this dataset, one can answer questions such as:
  * On which date(s) does Halley's Comet pass near to Earth? or 
  * How fast does Eros pass by Earth, on average?
 
+## Project Interface
+
+This project is driven by the `main.py` script. run `python3 main.py ... ... ...` at the command line to invoke the program that will the code. Run `python3 main.py --help` for an explanation of how to invoke the script.
+
+```
+usage: main.py [-h] [--neofile NEOFILE] [--cadfile CADFILE] {inspect,query,interactive} ...
+
+Explore past and future close approaches of near-Earth objects.
+
+positional arguments:
+  {inspect,query,interactive}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --neofile NEOFILE     Path to CSV file of near-Earth objects.
+  --cadfile CADFILE     Path to JSON file of close approach data.
+```
+The three subcommands: `inspect`, `query`, and `interactive`, are explained below:
+
+
 
 
 
