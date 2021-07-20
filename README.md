@@ -25,6 +25,10 @@ Users are able to inspect the properties of the near-Earth objects in the data s
 
 The following [glossary](https://cneos.jpl.nasa.gov/glossary/) by NASA's Center for Near-Earth Object Studies (CNEOS)define the terms. Data is also from there. 
 
+### Visual Exploration
+
+NASA has [a tutorial video](https://www.youtube.com/watch?v=UA6voCyCW1g) on how to effectively navigate the CNEOS website, and an [interactive close approach data table](https://cneos.jpl.nasa.gov/ca/) that one can investigate. Data is updated frequently.
+
 ### `neos.csv` 
 contains information about semantic, physical, orbital, and model parameters for certain small bodies (asteroids and comets, mostly) in our solar system.
  
@@ -111,6 +115,9 @@ Analysis will concentrate on _**des**_, _**cd**_, _**dist**_, and _**v_rel**_ me
 From this dataset, one can answer questions such as:
  * On which date(s) does Halley's Comet pass near to Earth? or 
  * How fast does Eros pass by Earth, on average?
+
+
+
 
 
 
