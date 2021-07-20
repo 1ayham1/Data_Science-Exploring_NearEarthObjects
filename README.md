@@ -21,6 +21,6 @@ Users are able to inspect the properties of the near-Earth objects in the data s
 
 ## Data Set
 
-One dataset `neos.csv` contains information about semantic, physical, orbital, and model parameters for certain small bodies (asteroids and comets, mostly) in our solar system. The other dataset (cad.json) contains information about NEO close approaches - moments in time when the orbit of an astronomical body brings it close to Earth. NASA helpfully provides a glossary to define any unfamiliar terms you might encounter.
+One dataset `**neos.csv**` contains information about semantic, physical, orbital, and model parameters for certain small bodies (asteroids and comets, mostly) in our solar system. The other dataset (cad.json) contains information about NEO close approaches - moments in time when the orbit of an astronomical body brings it close to Earth. NASA helpfully provides a glossary to define any unfamiliar terms you might encounter.
 
 Importantly, these datasets come directly from NASA - we haven't dressed them up for you at all.
