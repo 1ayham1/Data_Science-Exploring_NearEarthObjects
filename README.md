@@ -23,7 +23,7 @@ Users are able to inspect the properties of the near-Earth objects in the data s
 
 ## Data Set
 
-The following [glossary](https://cneos.jpl.nasa.gov/glossary/) by NASA's Center for Near-Earth Object Studies (CNEOS)define the terms. Data is also from there. 
+The following [glossary](https://cneos.jpl.nasa.gov/glossary/) by NASA's Center for Near-Earth Object Studies (CNEOS)define the terms. Data is also from there and is accessible in the Project Workspace lesson, under the `data/ folder`.
 
 ### Visual Exploration
 
