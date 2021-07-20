@@ -1,4 +1,4 @@
-# PROG_Pyth-Exploring_NearEarthObjects
+# Explore Close Approaches of Near-Earth Objects
 
 Python code that implements a command-line tool to inspect and query a dataset of Near Earth Objects (NEOs) and their close approaches to Earth. 
 
@@ -45,7 +45,7 @@ contains information about semantic, physical, orbital, and model parameters for
    * On which date(s) does Halley's Comet pass near to Earth? or 
    * How fast does Eros pass by Earth, on average?
 
-Below is an initial look at the data in `cad.json`.
+Below is an initial look at the data in `cad.json`. The "signature" field shows where this data came from. The "count" field tells us how many entries to expect in the "data" section. The "fields" key maps to a list of strings describing how we should interpret the entries in the "data" section. Lastly, the "data" section itself maps to a list of lists - each element is a list of data for a single close approach, corresponding (by order) with the "fields" key.
 
 ```
 {
@@ -86,7 +86,21 @@ Below is an initial look at the data in `cad.json`.
   ]
 }
 ```
+[NASA's API documentation](https://ssd-api.jpl.nasa.gov/doc/cad.html) describes each field:
 
+> * des - primary designation of the asteroid or comet (e.g., 443, 2000 SG344)
+> * orbit_id - orbit ID
+> * jd - time of close-approach (JD Ephemeris Time)
+> * cd - time of close-approach (formatted calendar date/time, in UTC)
+> * dist - nominal approach distance (au)
+> * dist_min - minimum (3-sigma) approach distance (au)
+> * dist_max - maximum (3-sigma) approach distance (au)
+> * v_rel - velocity relative to the approach body at close approach (km/s)
+> * v_inf - velocity relative to a massless body (km/s)
+> * t_sigma_f - 3-sigma uncertainty in the time of close-approach (formatted in days, hours, and minutes; days are not included if zero; example "13:02" is 13 hours 2 minutes; example "2_09:08" is 2 days 9 hours 8 minutes)
+> * h - absolute magnitude H (mag)
+
+Analysis will concentrate on _**des**_, _**cd**_, _**dist**_, and _**v_rel**_ measurements.
 
 
 
