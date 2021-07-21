@@ -1,5 +1,12 @@
 # Explore Close Approaches of Near-Earth Objects
 
+[main project site](https://github.com/udacity/nd303-c1-advanced-python-techniques-project-starter)
+[udacity nanodegrees](https://www.udacity.com/)
+
+## Development Environments
+
+Python 3.6+. To see the version of your environment's Python 3, run `python3 -V` at the command line. 
+
 ## Overview
 
 Python code that implements a command-line tool to inspect and query a dataset of Near Earth Objects (NEOs) and their close approaches to Earth. 
