@@ -1,7 +1,7 @@
 # Explore Close Approaches of Near-Earth Objects
 
-[main project site](https://github.com/udacity/nd303-c1-advanced-python-techniques-project-starter)
-[udacity nanodegrees](https://www.udacity.com/)
+* [main project site](https://github.com/udacity/nd303-c1-advanced-python-techniques-project-starter)
+* [udacity nanodegrees](https://www.udacity.com/)
 
 ## Development Environments
 
