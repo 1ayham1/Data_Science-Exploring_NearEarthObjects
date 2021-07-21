@@ -12,10 +12,8 @@ A `NearEarthObject` maintains a collection of its close approaches, and a
 `CloseApproach` maintains a reference to its NEO.
 
 The functions that construct these objects use information extracted from the
-data files from NASA, so these objects should be able to handle all of the
-quirks of the data set, such as missing names and unknown diameters.
+data files from NASA, and handles missing names and unknown diameters.
 
-You'll edit this file in Task 1.
 """
 from helpers import cd_to_datetime, datetime_to_str
 
@@ -32,22 +30,17 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
-    # TODO: How can you, and should you, change the arguments to this constructor?
-    # If you make changes, be sure to update the comments in this file.
+
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
-        # TODO: Assign information from the arguments passed to the constructor
-        # onto attributes named `designation`, `name`, `diameter`, and `hazardous`.
-        # You should coerce these values to their appropriate data type and
-        # handle any edge cases, such as a empty name being represented by `None`
-        # and a missing diameter being represented by `float('nan')`.
-        self.designation = ''
-        self.name = None
-        self.diameter = float('nan')
-        self.hazardous = False
+
+        self.designation = info.get("pdes",None)
+        self.name = info.get("name",None) 
+        self.diameter = info.get("diameter",float('nan'))
+        self.hazardous = info.get("pha",False)
 
         # Create an empty initial collection of linked approaches.
         self.approaches = []
@@ -55,15 +48,20 @@ class NearEarthObject:
     @property
     def fullname(self):
         """Return a representation of the full name of this NEO."""
-        # TODO: Use self.designation and self.name to build a fullname for this object.
-        return ''
+        
+        f_name = f"{self.designation} :{self.name}" if self.name else self.designation
+        
+        return f_name
 
     def __str__(self):
-        """Return `str(self)`."""
-        # TODO: Use this object's attributes to return a human-readable string representation.
-        # The project instructions include one possibility. Peek at the __repr__
-        # method for examples of advanced string formatting.
-        return f"A NearEarthObject ..."
+        """Return `str(self)`, return a human-readable string representation of this object"""
+        
+        hazard = "not" if not self.hazardous else ""
+        diam_km = f"has a diameter of {self.diameter:.3f} km " if self.diameter!=self.diameter else "" 
+        
+        msg = f"A NearEarthObject... {self.fullname} {diam_km} and is {hazard} potentially hazardous."
+        
+        return msg
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
