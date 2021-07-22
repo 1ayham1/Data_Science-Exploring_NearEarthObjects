@@ -16,7 +16,7 @@ data files from NASA, and handles missing names and unknown diameters.
 
 """
 from helpers import cd_to_datetime, datetime_to_str
-
+import math
 class NearEarthObject:
     """A near-Earth object (NEO).
 
@@ -60,11 +60,12 @@ class NearEarthObject:
         
         return f_name
 
+
     def __str__(self):
         """Return `str(self)`, a human-readable string representation of this object"""
         
         hazard = "not" if not self.hazardous else ""
-        diam_km = f"has a diameter of {self.diameter:.3f} km " if self.diameter!=self.diameter else "" 
+        diam_km = f"has a diameter of {self.diameter:.3f} km " if not math.isnan(self.diameter) else "" 
         
         msg = f"A NearEarthObject... {self.fullname} {diam_km} and is {hazard} potentially hazardous."
         
@@ -75,6 +76,7 @@ class NearEarthObject:
         return (f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, "
                 f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})")
 
+    
 
 class CloseApproach:
     """A close approach to Earth by an NEO.
@@ -134,9 +136,7 @@ class CloseApproach:
     def __str__(self):
         """Return `str(self)`, a human-readable string representation of this object"""
 
-        msg = f"A CloseApproach ... At {self.time_str}, '{self.neo.fullname}' approaches\
-             Earth at a distance of {self.distance:.2f} au and a velocity of\
-                  {self.velocity:.2f} km/s."
+        msg = f"A CloseApproach: At {self.time_str}, '{self.neo.fullname}' approaches Earth at a distance of {self.distance:.2f} au and a velocity of {self.velocity:.2f} km/s."
         
 
         return msg
@@ -145,3 +145,6 @@ class CloseApproach:
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return (f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, "
                 f"velocity={self.velocity:.2f}, neo={self.neo!r})")
+
+    def __eq__(self, other):
+        return self._designation == other.designation 
