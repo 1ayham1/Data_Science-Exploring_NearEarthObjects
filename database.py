@@ -9,8 +9,9 @@ Under normal circumstances, the main module creates one NEODatabase from the
 data on NEOs and close approaches extracted by `extract.load_neos` and
 `extract.load_approaches`.
 
-You'll edit this file in Tasks 2 and 3.
 """
+
+from collections import defaultdict
 
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
@@ -35,15 +36,45 @@ class NEODatabase:
         a collection of that NEO's close approaches, and the `.neo` attribute of
         each close approach references the appropriate NEO.
 
-        :param neos: A collection of `NearEarthObject`s.
-        :param approaches: A collection of `CloseApproach`es.
+        :param neos: A collection of `NearEarthObject`s. --> list
+        :param approaches: A collection of `CloseApproach`es. --> list
         """
+
         self._neos = neos
         self._approaches = approaches
 
-        # TODO: What additional auxiliary data structures will be useful?
+        #approaches is a subset from neos. i.e. some neos approach earth and some don't
+        #The mapping between the lists is many_to_one with unique id....
+        #  The same neo may approach earth multiple times
 
-        # TODO: Link together the NEOs and their close approaches.
+        neos_ids = [neo.designation for neo in self._neos]
+        approach_ids = [app.get_designation for app in self._approaches]
+
+        #store original indeces for fast access
+        neos_org_idxs = dict((k,i) for i,k in enumerate(neos_ids))
+        approach_org_idxs = dict((k,i) for i,k in enumerate(approach_ids))
+
+        #common ids between neos and approaches
+        neos_approach_shared_ids = set(neos_org_idxs).intersection(approach_ids)
+        
+        #locations of neo in neos_list that has a corrosponding id in approaches list and vice versa
+        idx_neos_subset = [neos_org_idxs[x] for x in neos_approach_shared_ids]
+        idx_approach_subset = [approach_org_idxs[x] for x in neos_approach_shared_ids]
+
+        
+        #iterat over the matched indeces
+        for neo_idx,approach_idx in zip(idx_neos_subset,idx_approach_subset):
+            self._approaches[approach_idx].neo = self._neos[neo_idx]
+            self._neos[neo_idx].approaches.append(self._approaches[approach_idx])
+
+        print("\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(self._neos[10])
+        print("-------------------------------------")
+        print(self._approaches[10])
+        print("\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        #these neos has designation that is also in approaches
+        #neos_of_interest = map(self._neos.__getitem__, idx_neos_subset)
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -58,8 +89,10 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.
-        return None
+        #build temp dictionary
+        neos_ids = {neo.designation: neo for neo in self._neos}
+
+        return neos_ids.get(designation.upper(),None)
 
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
@@ -75,8 +108,11 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        # TODO: Fetch an NEO by its name.
-        return None
+        
+        #Fetch an NEO by its name. Build temp dict
+        neos_names = {neo.name: neo for neo in self._neos}
+
+        return neos_names.get(name.capitalize(), None)
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
