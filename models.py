@@ -96,10 +96,15 @@ class CloseApproach:
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
 
-        self._designation = info.get('des',None)
-        self.time = cd_to_datetime(info.get('cd', None))
+        self._designation = info.get('des')
+        self.time = cd_to_datetime(info.get('cd'))
         self.distance = info.get('dist', float("nan"))
         self.velocity = info.get('v_rel', float("nan"))
+
+        #Also set default values in case of return empty string
+        self.time = self.time if self.time else None
+        self.distance = float(self.distance) if self.distance else float("nan")
+        self.velocity = float(self.velocity) if self.velocity else float("nan")
 
         # Create an attribute for the referenced NEO, originally None.
         self.neo = info.get("neo", None)
