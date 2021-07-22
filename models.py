@@ -17,7 +17,6 @@ data files from NASA, and handles missing names and unknown diameters.
 """
 from helpers import cd_to_datetime, datetime_to_str
 
-
 class NearEarthObject:
     """A near-Earth object (NEO).
 
@@ -37,11 +36,18 @@ class NearEarthObject:
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
 
-        self.designation = info.get("pdes",None)
-        self.name = info.get("name",None) 
+        #default = {"pdes":None,"name":None,"diameter":float("nan"),"pha":False}
+        
+        self.designation = info.get("pdes")
+        self.name = info.get("name") 
         self.diameter = info.get("diameter",float('nan'))
-        self.hazardous = info.get("pha",False)
+        self.hazardous = info.get("pha",False) 
 
+        #Also set default values in case of return empty string
+        self.name = self.name if self.name else None
+        self.diameter = self.diameter if self.diameter else float('nan')
+        self.hazardous = self.hazardous if self.hazardous else False
+        
         # Create an empty initial collection of linked approaches.
         self.approaches = []
 
