@@ -64,17 +64,26 @@ class NEODatabase:
         
         #iterat over the matched indeces
         for neo_idx,approach_idx in zip(idx_neos_subset,idx_approach_subset):
-            self._approaches[approach_idx].neo = self._neos[neo_idx]
-            self._neos[neo_idx].approaches.append(self._approaches[approach_idx])
 
-        print("\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print(self._neos[10])
-        print("-------------------------------------")
-        print(self._approaches[10])
-        print("\n\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            approach = self._approaches[approach_idx]
+            self._neos[neo_idx].approaches.append(approach)
+            
+            '''
+            if approach is not None:
+                self._neos[neo_idx].approaches.append(approach)
+            else:
+                self._neos[neo_idx].approaches = [approach]
+            '''
+
+            approach.neo = self._neos[neo_idx]
+
+
+            #self._approaches[approach_idx].neo = self._neos[neo_idx]
+            #self._neos[neo_idx].approaches.append(self._approaches[approach_idx])
 
         #these neos has designation that is also in approaches
         #neos_of_interest = map(self._neos.__getitem__, idx_neos_subset)
+
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -128,6 +137,11 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
+        #Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
-            yield approach
+            
+            if filters:
+                if all(map(lambda func: func(approach), filters)):
+                        yield approach
+            else:
+                yield approach
