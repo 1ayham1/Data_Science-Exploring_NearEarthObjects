@@ -138,7 +138,6 @@ class CloseApproach:
 
         msg = f"A CloseApproach: At {self.time_str}, '{self.neo.fullname}' approaches Earth at a distance of {self.distance:.2f} au and a velocity of {self.velocity:.2f} km/s."
         
-
         return msg
 
     def __repr__(self):
@@ -146,5 +145,9 @@ class CloseApproach:
         return (f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, "
                 f"velocity={self.velocity:.2f}, neo={self.neo!r})")
 
+    '''
+    CAREFUL: WHEN overriding this, the object becomes unhashable. to make it
+    so implement __hash__
     def __eq__(self, other):
         return self._designation == other.designation 
+    '''
