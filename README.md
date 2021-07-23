@@ -64,6 +64,7 @@ Here is a closer look at the purpose of each of these files and folders:
 The data files are located in the `data/` folder.
 
 Additionally to follow TDD approach, unit tests all live in the `tests/` folder. Run all of the tests with `python3 -m unittest --verbose` at the command line.
+example: 'python -m unittest --verbose tests.test_extract'
 
 
 ## Data Set
