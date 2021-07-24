@@ -16,7 +16,7 @@ iterator.
 
 """
 import operator
-
+from itertools import islice
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
@@ -101,7 +101,7 @@ class DesignationFilter(AttributeFilter):
         return approach.neo.designation
 
 #---------------------------------------------------------------
-class DateFilter(AttributeFilter):
+class DateFilters(AttributeFilter):
     """build an AttributeFilter that filtered on the Date attribute"""
     
     @classmethod
@@ -113,6 +113,58 @@ class DateFilter(AttributeFilter):
 
         return approach.time.date()
         
+#---------------------------------------------------------------
+class DistanceFilters(AttributeFilter):
+    """build an AttributeFilter that filtered on the Date attribute"""
+    
+    @classmethod
+    def get(cls, approach):
+        """ 
+        for an input time (date, start_date, end_date), return the 
+        corrosponding approach.time and convert to date_time_obj 
+        """
+
+        return approach.distance
+    
+#---------------------------------------------------------------
+class VelocityFilters(AttributeFilter):
+    """build an AttributeFilter that filtered on the Date attribute"""
+    
+    @classmethod
+    def get(cls, approach):
+        """ 
+        for an input time (date, start_date, end_date), return the 
+        corrosponding approach.time and convert to date_time_obj 
+        """
+
+        return approach.velocity
+
+#---------------------------------------------------------------
+class DiameterFilters(AttributeFilter):
+    """build an AttributeFilter that filtered on the Date attribute"""
+    
+    @classmethod
+    def get(cls, approach):
+        """ 
+        for an input time (date, start_date, end_date), return the 
+        corrosponding approach.time and convert to date_time_obj 
+        """
+
+        return approach.neo.diameter
+#---------------------------------------------------------------
+class HazardousFilter(AttributeFilter):
+    """build an AttributeFilter that filtered on the Date attribute"""
+    
+    @classmethod
+    def get(cls, approach):
+        """ 
+        for an input time (date, start_date, end_date), return the 
+        corrosponding approach.time and convert to date_time_obj 
+        """
+
+        return approach.neo.hazardous
+
+#---------------------------------------------------------------
 
 #---------------------------------------------------------------
 def create_filters(date=None, start_date=None, end_date=None,
@@ -152,15 +204,44 @@ def create_filters(date=None, start_date=None, end_date=None,
     
     filters_list = []
     
+    #----------------------Date Filters---------------------------
     if date:
-        filters_list.append(DateFilter(operator.eq, date))
+        filters_list.append(DateFilters(operator.eq, date))
 
     if start_date:
-        filters_list.append(DateFilter(operator.ge, start_date))
+        filters_list.append(DateFilters(operator.ge, start_date))
 
     if end_date:
-        filters_list.append(DateFilter(operator.le, end_date))
+        filters_list.append(DateFilters(operator.le, end_date))
 
+    #----------------------Distance Filters------------------------
+    if distance_min:
+        filters_list.append(DistanceFilters(operator.ge, distance_min))
+
+    if distance_max:
+        filters_list.append(DistanceFilters(operator.le, distance_max))  
+    
+    #----------------------Velocity Filters------------------------
+    if velocity_min:
+        filters_list.append(VelocityFilters(operator.ge, velocity_min))
+
+    if velocity_max:
+        filters_list.append(VelocityFilters(operator.le, velocity_max))
+
+    #----------------------Diameter  Filters------------------------
+    if diameter_min:
+        filters_list.append(DiameterFilters(operator.ge, diameter_min))
+
+    if diameter_max:
+        filters_list.append(DiameterFilters(operator.le, diameter_max))  
+  
+    #----------------------Hazardous Filter------------------------
+    if hazardous is not None:
+        filters_list.append(HazardousFilter(operator.eq, hazardous))
+    
+    #----------------------------------------------------------------
+    
+    
     return filters_list
      
 
@@ -174,5 +255,13 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    
+    #don't limit the iterator at all
+    if n == 0 or n is None:
+        return iterator
+
+    #else return first n elements from iterator:
+    #https://stackoverflow.com/questions/26864008/simplest-way-to-get-the-first-n-elements-of-an-iterator
+    
+    
+    return list(islice(iterator, n))
