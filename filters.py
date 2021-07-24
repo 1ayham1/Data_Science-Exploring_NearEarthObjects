@@ -14,7 +14,6 @@ the supplied `CloseApproach`.
 The `limit` function simply limits the maximum number of values produced by an
 iterator.
 
-You'll edit this file in Tasks 3a and 3c.
 """
 import operator
 
@@ -22,7 +21,7 @@ import operator
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
 
-
+#---------------------------------------------------------------
 class AttributeFilter:
     """A general superclass for filters on comparable attributes.
 
@@ -39,7 +38,7 @@ class AttributeFilter:
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
     def __init__(self, op, value):
-        """Construct a new `AttributeFilter` from an binary predicate and a reference value.
+        """Construct a new `AttributeFilter` from a binary predicate and a reference value.
 
         The reference value will be supplied as the second (right-hand side)
         argument to the operator function. For example, an `AttributeFilter`
@@ -49,11 +48,26 @@ class AttributeFilter:
         :param op: A 2-argument predicate comparator (such as `operator.le`).
         :param value: The reference value to compare against.
         """
+
+        # <=, ==, or >= - available as operator.le, operator.eq, and operator.ge. 
+        # That is, operator.ge(a, b) is the same as a >= b. 
+        # The value will just be our target value, as supplied by the user
+        #  at the command line and fed to create_filters by the main module.
+
         self.op = op
         self.value = value
 
     def __call__(self, approach):
         """Invoke `self(approach)`."""
+
+        #The __call__ method makes instance objects of this type behave as callables 
+        # - with an instance of a subclass of AttributeFilter named f, 
+        # then the code f(approach) evaluates f.__call__(approach). 
+        # Specifically, "calling" the AttributeFilter with a CloseApproach object 
+        # will get the attribute of interest (self.get(approach)) and compare it
+        #  (via self.op) to the reference value (self.value), returning either True
+        #  or False, representing whether that close approach satisfiesthe criterion.
+
         return self.op(self.get(approach), self.value)
 
     @classmethod
@@ -66,12 +80,41 @@ class AttributeFilter:
         :param approach: A `CloseApproach` on which to evaluate this filter.
         :return: The value of an attribute of interest, comparable to `self.value` via `self.op`.
         """
-        raise UnsupportedCriterionError
+        #one option is to make it also abstract 
+        raise UnsupportedCriterionError #subclass of NotImplementedError
 
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
+#---------------------------------------------------------------
+class DesignationFilter(AttributeFilter):
+    """build an AttributeFilter that filtered on the designation attribute
+    
+     of the NearEarthObject attached to a CloseApproach, 
+     define a new subclass of AttributeFilter 
+     (This is only an example & not needed because primary designations are unique 
+     and we already have NEODatabase.get_neo_by_designation). 
+     
+    """
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.designation
 
+#---------------------------------------------------------------
+class DateFilter(AttributeFilter):
+    """build an AttributeFilter that filtered on the Date attribute"""
+    
+    @classmethod
+    def get(cls, approach):
+        """ 
+        for an input time (date, start_date, end_date), return the 
+        corrosponding approach.time and convert to date_time_obj 
+        """
+
+        return approach.time.date()
+        
+
+#---------------------------------------------------------------
 def create_filters(date=None, start_date=None, end_date=None,
                    distance_min=None, distance_max=None,
                    velocity_min=None, velocity_max=None,
@@ -94,20 +137,32 @@ def create_filters(date=None, start_date=None, end_date=None,
     because the main module directly passes this result to that method. For now,
     this can be thought of as a collection of `AttributeFilter`s.
 
-    :param date: A `date` on which a matching `CloseApproach` occurs.
+    :param date: A `date` on which a matching `CloseApproach` occurs. (datetime objects)
     :param start_date: A `date` on or after which a matching `CloseApproach` occurs.
     :param end_date: A `date` on or before which a matching `CloseApproach` occurs.
-    :param distance_min: A minimum nominal approach distance for a matching `CloseApproach`.
-    :param distance_max: A maximum nominal approach distance for a matching `CloseApproach`.
-    :param velocity_min: A minimum relative approach velocity for a matching `CloseApproach`.
-    :param velocity_max: A maximum relative approach velocity for a matching `CloseApproach`.
-    :param diameter_min: A minimum diameter of the NEO of a matching `CloseApproach`.
-    :param diameter_max: A maximum diameter of the NEO of a matching `CloseApproach`.
-    :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
+    :param distance_min: A minimum nominal approach distance for a matching `CloseApproach`. (float)
+    :param distance_max: A maximum nominal approach distance for a matching `CloseApproach`. (float)
+    :param velocity_min: A minimum relative approach velocity for a matching `CloseApproach`. (float)
+    :param velocity_max: A maximum relative approach velocity for a matching `CloseApproach`. (float)
+    :param diameter_min: A minimum diameter of the NEO of a matching `CloseApproach`. (float)
+    :param diameter_max: A maximum diameter of the NEO of a matching `CloseApproach`. (float)
+    :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous. (bool)
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
-    return ()
+    
+    filters_list = []
+    
+    if date:
+        filters_list.append(DateFilter(operator.eq, date))
+
+    if start_date:
+        filters_list.append(DateFilter(operator.ge, start_date))
+
+    if end_date:
+        filters_list.append(DateFilter(operator.le, end_date))
+
+    return filters_list
+     
 
 
 def limit(iterator, n=None):
