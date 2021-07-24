@@ -115,51 +115,51 @@ class DateFilters(AttributeFilter):
         
 #---------------------------------------------------------------
 class DistanceFilters(AttributeFilter):
-    """build an AttributeFilter that filtered on the Date attribute"""
+    """build an AttributeFilter that filtered on Distance attribute"""
     
     @classmethod
     def get(cls, approach):
         """ 
-        for an input time (date, start_date, end_date), return the 
-        corrosponding approach.time and convert to date_time_obj 
+        for an input distance (min,max), return the 
+        corrosponding approach.distance 
         """
 
         return approach.distance
     
 #---------------------------------------------------------------
 class VelocityFilters(AttributeFilter):
-    """build an AttributeFilter that filtered on the Date attribute"""
+    """build an AttributeFilter that filtered on the velocity attribute"""
     
     @classmethod
     def get(cls, approach):
         """ 
-        for an input time (date, start_date, end_date), return the 
-        corrosponding approach.time and convert to date_time_obj 
+        for an input Velocity (min,max), return the 
+        corrosponding approach.velocity
         """
 
         return approach.velocity
 
 #---------------------------------------------------------------
 class DiameterFilters(AttributeFilter):
-    """build an AttributeFilter that filtered on the Date attribute"""
+    """build an AttributeFilter that filtered on diameter attribute"""
     
     @classmethod
     def get(cls, approach):
         """ 
-        for an input time (date, start_date, end_date), return the 
-        corrosponding approach.time and convert to date_time_obj 
+        for an input diameter (min,max), return the 
+        corrosponding approach.neo.diameter
         """
 
         return approach.neo.diameter
 #---------------------------------------------------------------
 class HazardousFilter(AttributeFilter):
-    """build an AttributeFilter that filtered on the Date attribute"""
+    """build an AttributeFilter that filtered on hazardous attribute"""
     
     @classmethod
     def get(cls, approach):
         """ 
-        for an input time (date, start_date, end_date), return the 
-        corrosponding approach.time and convert to date_time_obj 
+        for an input hazardous, return the 
+        corrosponding approach.neo.hazardous only if hazardous is not None 
         """
 
         return approach.neo.hazardous
