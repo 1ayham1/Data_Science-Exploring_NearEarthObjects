@@ -39,51 +39,27 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s. --> list
         :param approaches: A collection of `CloseApproach`es. --> list
         """
-
+        
         self._neos = neos
         self._approaches = approaches
 
-        #approaches is a subset from neos. i.e. some neos approach earth and some don't
-        #The mapping between the lists is many_to_one with unique id....
-        #  The same neo may approach earth multiple times
+        #Trading off space, so that these opperations can be parrallelized in future
+        ID_neo_corpus = {neo.designation: id for id, neo in enumerate(self._neos)}
+        ID_app_corpus = {app.get_designation: id for id, app in enumerate(self._approaches)}
 
-        neos_ids = [neo.designation for neo in self._neos]
-        approach_ids = [app.get_designation for app in self._approaches]
+        neos_approach_shared_ids = set(ID_neo_corpus).intersection(ID_app_corpus)
 
-        #store original indeces for fast access
-        neos_org_idxs = dict((k,i) for i,k in enumerate(neos_ids))
-        approach_org_idxs = dict((k,i) for i,k in enumerate(approach_ids))
-
-        #common ids between neos and approaches
-        neos_approach_shared_ids = set(neos_org_idxs).intersection(approach_ids)
+        #only approaches that also in neo. optimize search space
+        minimized_approachs_list = [app for app in self._approaches if app.get_designation in neos_approach_shared_ids]
         
-        #locations of neo in neos_list that has a corrosponding id in approaches list and vice versa
-        idx_neos_subset = [neos_org_idxs[x] for x in neos_approach_shared_ids]
-        idx_approach_subset = [approach_org_idxs[x] for x in neos_approach_shared_ids]
+        for approach in minimized_approachs_list:
 
-        
-        #iterat over the matched indeces
-        for neo_idx,approach_idx in zip(idx_neos_subset,idx_approach_subset):
+            app_id = approach.get_designation
+            matched_neo_idx = ID_neo_corpus[app_id]
 
-            approach = self._approaches[approach_idx]
-            self._neos[neo_idx].approaches.append(approach)
-            
-            '''
-            if approach is not None:
-                self._neos[neo_idx].approaches.append(approach)
-            else:
-                self._neos[neo_idx].approaches = [approach]
-            '''
-
-            approach.neo = self._neos[neo_idx]
-
-
-            #self._approaches[approach_idx].neo = self._neos[neo_idx]
-            #self._neos[neo_idx].approaches.append(self._approaches[approach_idx])
-
-        #these neos has designation that is also in approaches
-        #neos_of_interest = map(self._neos.__getitem__, idx_neos_subset)
-
+            approach.neo = self._neos[matched_neo_idx]
+            self._neos[matched_neo_idx].approaches.append(approach)
+    
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
