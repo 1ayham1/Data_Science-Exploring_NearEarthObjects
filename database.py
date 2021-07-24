@@ -123,6 +123,8 @@ class NEODatabase:
             if filters:
                 if all(map(lambda func: func(approach), filters)):
                         yield approach
+                else:
+                    print("careful, some filters did not pass!")
             else:
                 #generate all known close approaches
                 yield approach
