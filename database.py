@@ -50,6 +50,7 @@ class NEODatabase:
         neos_approach_shared_ids = set(ID_neo_corpus).intersection(ID_app_corpus)
 
         #only approaches that also in neo. optimize search space
+        #future optimization also include use of set() operations A.B'
         minimized_approachs_list = [app for app in self._approaches if app.get_designation in neos_approach_shared_ids]
         
         for approach in minimized_approachs_list:
@@ -105,6 +106,9 @@ class NEODatabase:
         This generates a stream of `CloseApproach` objects that match all of the
         provided filters.
 
+        The main.py script supplies to the query method whatever was returned 
+        from the create_filters function
+
         If no arguments are provided, generate all known close approaches.
 
         The `CloseApproach` objects are generated in internal order, which isn't
@@ -113,11 +117,12 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        #Generate `CloseApproach` objects that match all of the filters.
+
         for approach in self._approaches:
             
             if filters:
                 if all(map(lambda func: func(approach), filters)):
                         yield approach
             else:
+                #generate all known close approaches
                 yield approach
