@@ -10,10 +10,6 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 `extract.load_approaches`.
 
 """
-
-from collections import defaultdict
-
-
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
@@ -48,7 +44,7 @@ class NEODatabase:
         # Trading off space, so that these opperations can be parrallelized in
         # future
         ID_neo_corpus = {
-            neo.designation: id for id,neo in enumerate(self._neos)}
+            neo.designation: id for id, neo in enumerate(self._neos)}
         ID_app_corpus = {
             app.get_designation: id for id, app in enumerate(self._approaches)}
 
@@ -67,8 +63,9 @@ class NEODatabase:
 
             approach.neo = self._neos[matched_neo_idx]
             self._neos[matched_neo_idx].approaches.append(approach)
-        
-        #This is much more efficient than creating these dictionaries inside the function
+
+        # This is much more efficient than creating these dictionaries inside
+        # the function
         self.neos_ids = {neo.designation: neo for neo in self._neos}
         self.neos_names = {neo.name: neo for neo in self._neos}
 
@@ -85,7 +82,7 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-       
+
         return self.neos_ids.get(designation.upper(), None)
 
     def get_neo_by_name(self, name):
@@ -126,9 +123,7 @@ class NEODatabase:
         for approach in self._approaches:
 
             if filters:
-                if all(map(lambda func: func(approach), filters)):
+                if all(map(lambda func,app=approach: func(app), filters)):
                     yield approach
-
             else:
-                # generate all known close approaches
                 yield approach
