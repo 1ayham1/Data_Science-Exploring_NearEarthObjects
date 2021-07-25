@@ -76,7 +76,24 @@ class NearEarthObject:
         return (f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, "
                 f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})")
 
-    
+
+    def __iter__(self):
+        """helper to iterate and save objects"""
+
+        serialized_obj={"designation": self.designation,"name": self.name,
+                        "diameter_km": self.diameter,
+                        "potentially_hazardous": self.hazardous}
+        
+        #Handle edge cases:
+        serialized_obj['name'] = serialized_obj['name'] if serialized_obj['name'] is not None else ''
+        serialized_obj["potentially_hazardous"] = True if serialized_obj["potentially_hazardous"] else False
+
+        if math.isnan(serialized_obj["diameter_km"]):
+            serialized_obj["diameter_km"] = float('nan')
+        
+        serialized_obj = [serialized_obj]
+         
+        return iter(serialized_obj)
 
 class CloseApproach:
     """A close approach to Earth by an NEO.
@@ -144,6 +161,39 @@ class CloseApproach:
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return (f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, "
                 f"velocity={self.velocity:.2f}, neo={self.neo!r})")
+    
+    def __iter__(self):
+        """helper to iterate and save objects
+        
+        returns list of two dictionaries that compress fields of interest to be saved
+        to either .json or .csv files 
+        """
+ 
+        #approach dictionary that includes neo object
+        extended_approach = [{"datetime_utc":datetime_to_str(self.time),
+                          "distance_au": self.distance,"velocity_km_s": self.velocity}]
+
+        
+        #encoded list of dictionary to fields of interest from neo object
+        neo_dict = list(iter(self.neo))
+
+        #print(neo_dict)
+        #input("press")
+
+        extended_approach.extend(neo_dict)
+        
+        #extended_approach.update(neo_dict)
+        # OR: serialized_obj = dict(extended_approach, **neo_dict)
+        #serialized_obj = [extended_approach]
+       
+        #print(serialized_obj)
+        #input("press any key")
+
+        #serialized_obj = []
+        
+        #
+
+        return iter(extended_approach)
 
     '''
     CAREFUL: WHEN overriding this, the object becomes unhashable. to make it
