@@ -13,6 +13,7 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 
 from collections import defaultdict
 
+
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
@@ -21,6 +22,7 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
@@ -39,20 +41,25 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s. --> list
         :param approaches: A collection of `CloseApproach`es. --> list
         """
-        
+
         self._neos = neos
         self._approaches = approaches
 
-        #Trading off space, so that these opperations can be parrallelized in future
-        ID_neo_corpus = {neo.designation: id for id, neo in enumerate(self._neos)}
-        ID_app_corpus = {app.get_designation: id for id, app in enumerate(self._approaches)}
+        # Trading off space, so that these opperations can be parrallelized in
+        # future
+        ID_neo_corpus = {
+            neo.designation: id for id,neo in enumerate(self._neos)}
+        ID_app_corpus = {
+            app.get_designation: id for id, app in enumerate(self._approaches)}
 
-        neos_approach_shared_ids = set(ID_neo_corpus).intersection(ID_app_corpus)
+        neos_approach_shared_ids = set(
+            ID_neo_corpus).intersection(ID_app_corpus)
 
-        #only approaches that also in neo. optimize search space
-        #future optimization also include use of set() operations A.B'
-        minimized_approachs_list = [app for app in self._approaches if app.get_designation in neos_approach_shared_ids]
-        
+        # only approaches that also in neo. optimize search space
+        # future optimization also include use of set() operations A.B'
+        minimized_approachs_list = [
+            app for app in self._approaches if app.get_designation in neos_approach_shared_ids]
+
         for approach in minimized_approachs_list:
 
             app_id = approach.get_designation
@@ -60,7 +67,10 @@ class NEODatabase:
 
             approach.neo = self._neos[matched_neo_idx]
             self._neos[matched_neo_idx].approaches.append(approach)
-    
+        
+        #This is much more efficient than creating these dictionaries inside the function
+        self.neos_ids = {neo.designation: neo for neo in self._neos}
+        self.neos_names = {neo.name: neo for neo in self._neos}
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -75,10 +85,8 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        #build temp dictionary
-        neos_ids = {neo.designation: neo for neo in self._neos}
-
-        return neos_ids.get(designation.upper(),None)
+       
+        return self.neos_ids.get(designation.upper(), None)
 
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
@@ -94,11 +102,8 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        
-        #Fetch an NEO by its name. Build temp dict
-        neos_names = {neo.name: neo for neo in self._neos}
 
-        return neos_names.get(name.capitalize(), None)
+        return self.neos_names.get(name.capitalize(), None)
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
@@ -106,7 +111,7 @@ class NEODatabase:
         This generates a stream of `CloseApproach` objects that match all of the
         provided filters.
 
-        The main.py script supplies to the query method whatever was returned 
+        The main.py script supplies to the query method whatever was returned
         from the create_filters function
 
         If no arguments are provided, generate all known close approaches.
@@ -119,12 +124,11 @@ class NEODatabase:
         """
 
         for approach in self._approaches:
-            
+
             if filters:
                 if all(map(lambda func: func(approach), filters)):
-                        yield approach
-                #else:
-                #    print("careful, some filters did not pass!")
+                    yield approach
+
             else:
-                #generate all known close approaches
+                # generate all known close approaches
                 yield approach
