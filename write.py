@@ -79,8 +79,6 @@ def write_to_json(results, filename):
         json_data['neo'] = neo_summary
 
         json_data_list.append(json_data)
-        # print(json_data)
-        # input("ddd")
 
     with open(filename, 'w') as out_stream:
         json.dump(json_data_list, out_stream, indent='\t')
