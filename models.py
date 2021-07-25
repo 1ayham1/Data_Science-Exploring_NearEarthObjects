@@ -24,9 +24,9 @@ class NearEarthObject:
     """A near-Earth object (NEO).
 
     An NEO encapsulates semantic and physical parameters about the object, such
-    as its primary designation (required, unique), IAU name (optional), diameter
-    in kilometers (optional - sometimes unknown), and whether it's marked as
-    potentially hazardous to Earth.
+    as its primary designation (required, unique), IAU name (optional),
+    diameter in kilometers (optional - sometimes unknown), and whether
+    it's marked as potentially hazardous to Earth.
 
     A `NearEarthObject` also maintains a collection of its close approaches -
     initialized to an empty collection, but eventually populated in the
@@ -36,10 +36,14 @@ class NearEarthObject:
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
 
-        :param info: A dictionary of excess keyword arguments supplied to the constructor.
-        """
+        one implementation can be by defining default keys/values
+        default =
+        {"pdes":None,"name":None,"diameter":float("nan"),"pha":False}
+        another can by by overriding __missing__ :D
 
-        #default = {"pdes":None,"name":None,"diameter":float("nan"),"pha":False}
+        :param info:
+            dictionary of excess keyword arguments supplied to the construct
+        """
 
         self.designation = info.get("pdes")
         self.name = info.get("name")
@@ -50,7 +54,6 @@ class NearEarthObject:
         self.name = self.name if self.name else None
         self.diameter = float(self.diameter) if self.diameter else float('nan')
         self.hazardous = False if self.hazardous in ['N', ''] else True
-        #self.hazardous = self.hazardous if self.hazardous else False
 
         # Create an empty initial collection of linked approaches.
         self.approaches = []
@@ -59,25 +62,34 @@ class NearEarthObject:
     def fullname(self):
         """Return a representation of the full name of this NEO."""
 
-        f_name = f"{self.designation} :{self.name}" if self.name else self.designation
+        f_name = (
+            f"{self.designation} :{self.name}"
+            if self.name else self.designation
+        )
 
         return f_name
 
     def __str__(self):
-        """Return `str(self)`, a human-readable string representation of this object"""
+        """Return str(self),human-readable str representation of this obj."""
 
         hazard = "not" if not self.hazardous else ""
-        diam_km = f"has a diameter of {self.diameter:.3f} km " if not math.isnan(
-            self.diameter) else ""
+        diam_km = (
+            f"has a diameter of {self.diameter:.3f} km "
+            if not math.isnan(self.diameter)
+            else "")
 
-        msg = f"A NearEarthObject.. {self.fullname} {diam_km} and is {hazard} potentially hazardous"
+        msg = f"""A NearEarthObject.. {self.fullname} {diam_km} and is
+         {hazard} potentially hazardous"""
 
         return msg
 
     def __repr__(self):
-        """Return `repr(self)`, a computer-readable string representation of this object."""
+        """Return `repr(self)`,
+            a computer-readable string representation of this object."""
+
         return (
-            f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, "
+            f"NearEarthObject(designation={self.designation!r}, "
+            f"name={self.name!r}, "
             f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})")
 
     def __iter__(self):
@@ -88,7 +100,12 @@ class NearEarthObject:
                           "potentially_hazardous": self.hazardous}
 
         # Handle edge cases:
-        serialized_obj['name'] = serialized_obj['name'] if serialized_obj['name'] is not None else ''
+        serialized_obj['name'] = (
+            serialized_obj['name']
+            if serialized_obj['name'] is not None
+            else ''
+        )
+
         serialized_obj["potentially_hazardous"] = bool(
             serialized_obj["potentially_hazardous"])
 
@@ -103,10 +120,10 @@ class NearEarthObject:
 class CloseApproach:
     """A close approach to Earth by an NEO.
 
-    A `CloseApproach` encapsulates information about the NEO's close approach to
-    Earth, such as the date and time (in UTC) of closest approach, the nominal
-    approach distance in astronomical units, and the relative approach velocity
-    in kilometers per second.
+    A `CloseApproach` encapsulates information about the NEO's close approach
+    to Earth, such as the date and time (in UTC) of closest approach, the
+    nominal approach distance in astronomical units, and the relative approach
+    velocity in kilometers per second.
 
     A `CloseApproach` also maintains a reference to its `NearEarthObject` -
     initally, this information (the NEO's primary designation) is saved in a
@@ -117,7 +134,8 @@ class CloseApproach:
     def __init__(self, **info):
         """Create a new `CloseApproach`.
 
-        :param info: A dictionary of excess keyword arguments supplied to the constructor.
+        :param info:
+            dictionary of excess keyword arguments supplied to the construct.
         """
 
         self._designation = info.get('des')
@@ -141,10 +159,10 @@ class CloseApproach:
 
     @property
     def time_str(self):
-        """Return a formatted representation of this `CloseApproach`'s approach time.
+        """Return a formatted repr. of this `CloseApproach`'s approach time.
 
         The value in `self.time` should be a Python `datetime` object. While a
-        `datetime` object has a string representation, the default representation
+        `datetime` object has a string representation, the default repr.
         includes seconds - significant figures that don't exist in our input
         data set.
 
@@ -156,28 +174,39 @@ class CloseApproach:
         return datetime_to_str(self.time)
 
     def __str__(self):
-        """Return `str(self)`, a human-readable string representation of this object"""
+        """Return `str(self)`,
+        a human-readable string representation of this object"""
 
-        msg = f"A CloseApproach: At {self.time_str}, '{self.neo.fullname}' approaches Earth at a distance of {self.distance:.2f} au and a velocity of {self.velocity:.2f} km/s."
+        msg = f"""A CloseApproach: At {self.time_str},
+         '{self.neo.fullname}' approaches Earth at a distance of
+          {self.distance:.2f} au and a velocity of
+           {self.velocity:.2f} km/s."""
 
         return msg
 
     def __repr__(self):
-        """Return `repr(self)`, a computer-readable string representation of this object."""
+        """Return `repr(self)`,
+        a computer-readable string representation of this object."""
+
         return (
-            f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, "
+            f"CloseApproach(time={self.time_str!r}, "
+            f"distance={self.distance:.2f}, "
             f"velocity={self.velocity:.2f}, neo={self.neo!r})")
 
     def __iter__(self):
         """helper to iterate and save objects
 
-        returns list of two dictionaries that compress fields of interest to be saved
-        to either .json or .csv files
+        returns list of two dictionaries that compress fields of interest
+        to be saved to either .json or .csv files
         """
 
         # approach dictionary that includes neo object
-        extended_approach = [{"datetime_utc": datetime_to_str(
-            self.time), "distance_au": self.distance, "velocity_km_s": self.velocity}]
+        extended_approach = [
+            {
+                "datetime_utc": datetime_to_str(self.time),
+                "distance_au": self.distance,
+                "velocity_km_s": self.velocity
+            }]
 
         # encoded list of dictionary to fields of interest from neo object
         neo_dict = list(iter(self.neo))
