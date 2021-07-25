@@ -15,8 +15,9 @@ The functions that construct these objects use information extracted from the
 data files from NASA, and handles missing names and unknown diameters.
 
 """
-from helpers import cd_to_datetime, datetime_to_str
 import math
+
+from helpers import cd_to_datetime, datetime_to_str
 
 
 class NearEarthObject:
@@ -47,9 +48,10 @@ class NearEarthObject:
 
         # Also set default values in case of return empty string
         self.name = self.name if self.name else None
-        self.diameter = self.diameter if self.diameter else float('nan')
-        self.hazardous = self.hazardous if self.hazardous else False
-
+        self.diameter = float(self.diameter) if self.diameter else float('nan')
+        self.hazardous = False if self.hazardous in ['N', ''] else True
+        #self.hazardous = self.hazardous if self.hazardous else False
+    
         # Create an empty initial collection of linked approaches.
         self.approaches = []
 
@@ -68,7 +70,7 @@ class NearEarthObject:
         diam_km = f"has a diameter of {self.diameter:.3f} km " if not math.isnan(
             self.diameter) else ""
 
-        msg = f"A NearEarthObject... {self.fullname} {diam_km} and is {hazard} potentially hazardous."
+        msg = f"A NearEarthObject.. {self.fullname} {diam_km} and is {hazard} potentially hazardous"
 
         return msg
 
@@ -87,7 +89,8 @@ class NearEarthObject:
 
         # Handle edge cases:
         serialized_obj['name'] = serialized_obj['name'] if serialized_obj['name'] is not None else ''
-        serialized_obj["potentially_hazardous"] = True if serialized_obj["potentially_hazardous"] else False
+        serialized_obj["potentially_hazardous"] = bool(
+            serialized_obj["potentially_hazardous"])
 
         if math.isnan(serialized_obj["diameter_km"]):
             serialized_obj["diameter_km"] = float('nan')
@@ -182,10 +185,3 @@ class CloseApproach:
         extended_approach.extend(neo_dict)
 
         return iter(extended_approach)
-
-    '''
-    CAREFUL: WHEN overriding this, the object becomes unhashable. to make it
-    so implement __hash__
-    def __eq__(self, other):
-        return self._designation == other.designation
-    '''
