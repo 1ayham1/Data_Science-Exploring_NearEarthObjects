@@ -15,8 +15,6 @@ import csv
 import json
 
 from models import NearEarthObject, CloseApproach
-from collections import defaultdict
-
 
 def load_neos(neo_csv_path):
     """Read near-Earth object information from a CSV file.
@@ -24,20 +22,14 @@ def load_neos(neo_csv_path):
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    
+
     neo_obj_lst = []
 
-    with open(neo_csv_path,'r') as cv_file:
-        
+    with open(neo_csv_path, 'r') as cv_file:
+
         neo_reader = csv.DictReader(cv_file)
-        
+
         for neo_elem in neo_reader:
-            
-            #handle edge cases
-            neo_elem['pdes']=neo_elem['pdes']
-            neo_elem['name'] = neo_elem.get('name', None)
-            neo_elem['diameter'] = float(neo_elem['diameter']) if neo_elem["diameter"] else None
-            neo_elem['pha'] = False if neo_elem['pha'] in ['N',''] else True
 
             neo_obj = NearEarthObject(**neo_elem)
             neo_obj_lst.append(neo_obj)
@@ -51,16 +43,15 @@ def load_approaches(cad_json_path):
     :param neo_csv_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-   
-    with open(cad_json_path,'r') as json_file:
-        
+
+    with open(cad_json_path, 'r') as json_file:
+
         close_reader = json.load(json_file)
 
         close_obj_keys = close_reader["fields"]
         close_obj_data = close_reader["data"]
-        close_reader_dict= [dict(zip(close_obj_keys, value)) for value in close_obj_data]
+        close_reader_dict = [dict(zip(close_obj_keys, value)) for value in close_obj_data]
 
-        
         close_approach_lst = []
 
         for elem in close_reader_dict:
