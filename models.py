@@ -51,7 +51,7 @@ class NearEarthObject:
         self.diameter = float(self.diameter) if self.diameter else float('nan')
         self.hazardous = False if self.hazardous in ['N', ''] else True
         #self.hazardous = self.hazardous if self.hazardous else False
-    
+
         # Create an empty initial collection of linked approaches.
         self.approaches = []
 
