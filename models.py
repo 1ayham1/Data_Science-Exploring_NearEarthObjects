@@ -179,21 +179,7 @@ class CloseApproach:
         # encoded list of dictionary to fields of interest from neo object
         neo_dict = list(iter(self.neo))
 
-        # print(neo_dict)
-        # input("press")
-
         extended_approach.extend(neo_dict)
-
-        # extended_approach.update(neo_dict)
-        # OR: serialized_obj = dict(extended_approach, **neo_dict)
-        #serialized_obj = [extended_approach]
-
-        # print(serialized_obj)
-        #input("press any key")
-
-        #serialized_obj = []
-
-        #
 
         return iter(extended_approach)
 
