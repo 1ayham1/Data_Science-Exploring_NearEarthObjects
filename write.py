@@ -20,12 +20,15 @@ def write_to_csv(results, filename):
     from the `results` stream and its associated near-Earth object.
 
     - A missing name is represented by the empty string.
-    - A missing diameter is represented by either an empty string or by the string 'nan'.
-    - The potentially_hazardous flag is represented either by the string 'False' or
-    the string 'True'.
+    - A missing diameter is represented by either an empty string or
+     by the string 'nan'.
+    - The potentially_hazardous flag is represented either by
+     the string 'False' or the string 'True'.
 
-    :param results: An iterable of `CloseApproach` objects.
-    :param filename: A Path-like object pointing to where the data should be saved.
+    :param results: 
+        An iterable of `CloseApproach` objects.
+    :param filename: 
+        A Path-like object pointing to where the data should be saved.
     """
 
     fieldnames = (
@@ -57,13 +60,15 @@ def write_to_csv(results, filename):
 def write_to_json(results, filename):
     """Write an iterable of `CloseApproach` objects to a JSON file.
 
-    The precise output specification is in `README.md`. Roughly, the output is a
+    The precise output specification is in README.md. Roughly, the output is a
     list containing dictionaries, each mapping `CloseApproach` attributes to
     their values and the 'neo' key mapping to a dictionary of the associated
     NEO's attributes.
 
-    :param results: An iterable of `CloseApproach` objects.
-    :param filename: A Path-like object pointing to where the data should be saved.
+    :param results: 
+        An iterable of `CloseApproach` objects.
+    :param filename: 
+        A Path-like object pointing to where the data should be saved.
     """
 
     json_data_list = []
